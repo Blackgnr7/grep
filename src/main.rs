@@ -1,19 +1,29 @@
-use std::env;
+use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+#[derive(Parser)]
+#[command(name = "NetVoid")]
+struct Cli {
+    #[arg(long, short)]
+    file: Option<String>,
+
+    #[arg(long, short)]
+    text: Option<String>,
+}
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 3{
-        println!("por favor coloque exetamente assim, grep 'file' 'palavra'");
-        return;
-    }
-    let file = File::open(&args[1]).expect("deu erro");
-    let read = BufReader::new(file);
-    for line in read.lines(){
-        let linha = line.unwrap();
-        if linha.contains(&args[2]){
-            println!("{:?}", linha)
+    let cli = Cli::parse();
+    if let Some(texto) = &cli.text {
+        if let Some(arquivo) = &cli.file {
+            let file = File::open(arquivo).expect("deu erro");
+            let read = BufReader::new(file);
+            for line in read.lines() {
+                let linha = line.unwrap();
+                if linha.contains(texto) {
+                    println!("{:?}", linha)
+                }
+            }
         }
     }
 }
