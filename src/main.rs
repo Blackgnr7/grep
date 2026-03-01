@@ -18,11 +18,13 @@ fn main() {
         if let Some(arquivo) = &cli.file {
             let file = File::open(arquivo).expect("deu erro");
             let read = BufReader::new(file);
+            let mut i = 1;
             for line in read.lines() {
                 let linha = line.unwrap();
                 if linha.contains(texto) {
-                    println!("{:?}", linha)
+                    println!("{:?}, {}", linha, i)
                 }
+                i = i+1;
             }
         }
     }
